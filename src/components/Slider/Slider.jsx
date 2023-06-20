@@ -8,9 +8,9 @@ import { Skeleton } from "@mui/material";
 
 function Slider() {
   // swipe detection
-  let dataSlider = [];
-  const { res, loading, error } = useFetch(`slider/getAll`);
 
+  const { res, loading, error } = useFetch(`slider/getAll`);
+  let dataSlider = [];
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
@@ -77,11 +77,15 @@ function Slider() {
     );
   }
   if (loading) return "";
+  dataSlider = res.data;
   return (
     <div className="container-slider">
-      {res.data.map((slide, index) => {
+      {dataSlider.map((slide, index) => {
         return (
-          <RouterLink to="search/seluni" key={index}>
+          <RouterLink
+            to={slide.path === null ? process.env.REACT_URL : slide.path}
+            key={index}
+          >
             <div
               key={index}
               className={
@@ -89,25 +93,18 @@ function Slider() {
               }
             >
               <picture>
-                <div
-                  className="blur-load"
-                  style={{
-                    backgroundImage: "url(https://placehold.co/400?text=...)",
-                  }}
-                >
-                  <source
-                    media="(max-width: 650px)"
-                    srcSet={process.env.REACT_APP_UPLOAD_URL + slide.mobile}
-                  ></source>
-                  <img
-                    src={process.env.REACT_APP_UPLOAD_URL + slide.desktop}
-                    draggable={false}
-                    onTouchStart={onTouchStart}
-                    onTouchMove={onTouchMove}
-                    onTouchEnd={onTouchEnd}
-                    loading="lazy"
-                  />
-                </div>
+                <source
+                  media="(max-width: 650px)"
+                  srcSet={process.env.REACT_APP_UPLOAD_URL + slide.mobile}
+                ></source>
+                <img
+                  src={process.env.REACT_APP_UPLOAD_URL + slide.desktop}
+                  draggable={false}
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={onTouchEnd}
+                  loading="lazy"
+                />
               </picture>
             </div>
           </RouterLink>
@@ -118,7 +115,7 @@ function Slider() {
         <BtnSlider moveSlide={nextSlide} direction={"prev"} />
       </Box>
       <div className="container-dots">
-        {res.data.map((slide, index) => (
+        {dataSlider.map((slide, index) => (
           <div
             key={index}
             onClick={() => moveDot(index + 1)}

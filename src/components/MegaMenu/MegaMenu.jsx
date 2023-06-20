@@ -10,17 +10,18 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { makeStyles } from "@mui/styles";
+import useClasses from "../../hooks/useClasses";
 import { Link as RouterLink } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-const useStyles = makeStyles((theme) => ({
+
+const styles = (theme) => ({
   popover: {
     pointerEvents: "none",
   },
   popoverContent: {
     pointerEvents: "auto",
   },
-}));
+});
 function MegaMenu({ subCats, anchorEl, setAnchorEl, event }) {
   const open = Boolean(anchorEl);
   const handleClose = () => {
@@ -31,7 +32,7 @@ function MegaMenu({ subCats, anchorEl, setAnchorEl, event }) {
     setAnchorEl(event);
   };
 
-  const classes = useStyles();
+  const classes = useClasses(styles);
   if (subCats.length === 0) return "";
   return (
     <Popover
@@ -76,7 +77,7 @@ function MegaMenu({ subCats, anchorEl, setAnchorEl, event }) {
                 }}
               >
                 <Link
-                  to={`/search/${cat.slug}`}
+                  to={`/search/${cat.slug}/${cat.id}`}
                   sx={{ textUnderlineOffset: "7px" }}
                   component={RouterLink}
                   underline="hover"
@@ -114,7 +115,7 @@ function MegaMenu({ subCats, anchorEl, setAnchorEl, event }) {
               {cat.children.map((child, index) => (
                 <ListItem disablePadding key={index}>
                   <Link
-                    to={`/search/${child.slug}`}
+                    to={`/search/${child.slug}/${child.id}`}
                     underline="hover"
                     sx={{
                       textUnderlineOffset: "5px",
