@@ -9,8 +9,11 @@ const Cat = ({ image, name, slug }) => {
   // console.log("imageUrl", process.env.REACT_APP_UPLOAD_URL + image);
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <LazyImage imageUrl={process.env.REACT_APP_UPLOAD_URL + image} />
-
+      <LazyImage
+        imageUrl={process.env.REACT_APP_UPLOAD_URL + image}
+        width={100}
+        height={100}
+      />
       {/* <img
         src={process.env.REACT_APP_UPLOAD_URL + image}
         alt={name}
@@ -37,7 +40,7 @@ function HomeCats() {
       <Box mb={3}>
         <Typography variant="h6">دسته بندی های فروشگاه</Typography>
       </Box>
-      <Box>
+      <Box width="100%">
         <Grid container direction="row" rowSpacing={3} justifyContent="center">
           {categories.map((category, index) => {
             if (category.parentId === 0) {

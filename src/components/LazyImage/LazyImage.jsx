@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Blurhash } from "react-blurhash";
 import { Box } from "@mui/material";
-import useImageToBlurhash from "../../hooks/useImageToBlurhash";
 
-function LazyImage({ imageUrl }) {
+function LazyImage({ imageUrl, width, height }) {
   const [isLoaded, setLoaded] = useState(false);
   const [isLoadStarted, setLoadStarted] = useState(false);
-  const hashUrl = useImageToBlurhash(imageUrl);
-  console.log("hashUrl", hashUrl);
   const handleLoad = () => {
     setLoaded(true);
   };
@@ -17,28 +14,26 @@ function LazyImage({ imageUrl }) {
     setLoadStarted(true);
   };
 
-  //   const url = `http://localhost:9000/${image.name}`;
-
   return (
     <Box position="relative">
       <LazyLoadImage
         key={imageUrl}
         src={imageUrl}
-        height={500}
-        width={333}
         onLoad={handleLoad}
         beforeLoad={handleLoadStarted}
+        width={width}
+        height={height}
       />
       {!isLoaded && isLoadStarted && (
         // <LazyLoadComponent>
-        <Box zIndex={20} position="absolute" top={0} left={0}>
+        <Box position="absolute" top={0} left={0}>
           <Blurhash
-            hash="L5F7e_4+6L%E?=npFgro1l-4#mEN"
-            width={333}
-            height={500}
+            hash="ZB7Jnd#m0|6NwK}Z-U5kACjFofbHR*oLofaxa|bH5QS#=y$4X8ACI:-B-AX8R%n%xaWBNaf+n%n%"
             resolutionX={32}
             resolutionY={32}
             punch={1}
+            width={width}
+            height={height}
           />
         </Box>
         // </LazyLoadComponent>
