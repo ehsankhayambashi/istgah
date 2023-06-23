@@ -28,7 +28,7 @@ function LazyImage({ imageUrl, width, height }) {
         // <LazyLoadComponent>
         <Box position="absolute" top={0} left={0}>
           <Blurhash
-            hash="ZB7Jnd#m0|6NwK}Z-U5kACjFofbHR*oLofaxa|bH5QS#=y$4X8ACI:-B-AX8R%n%xaWBNaf+n%n%"
+            hash="L1O|b2-;fQ-;_3fQfQfQfQfQfQfQ"
             resolutionX={32}
             resolutionY={32}
             punch={1}

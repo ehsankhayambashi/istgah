@@ -9,9 +9,29 @@ import LazyImage from "../LazyImage/LazyImage";
 
 function Slider() {
   // swipe detection
-
-  const { res, loading, error } = useFetch(`slider/getAll`);
   let dataSlider = [];
+  //   // fetch data
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://89.106.206.6:1337/api/slider/getAll",
+  //         {
+  //           headers: {
+  //             Authorization: "bearer " + process.env.REACT_APP_API_TOKEN,
+  //           },
+  //         }
+  //       );
+  //       const data = await response.json();
+  //       setData(data);
+  //       // Handle the data or set it to state
+  //     } catch (error) {
+  //       // Handle any errors
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+  const { res, loading, error } = useFetch(`/slider/getAll`);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
@@ -65,20 +85,21 @@ function Slider() {
   //   return () => clearTimeout(timer);
   // }, [slideIndex]);
 
-  if (loading) {
-    return (
-      <div className="container-slider">
-        <Skeleton
-          animation="wave"
-          variant="rectangular"
-          width="100%"
-          height="40vh"
-        />
-      </div>
-    );
-  }
-  if (loading) return "";
-  dataSlider = res.data;
+  // if (loading) {
+  //   return (
+  //     <div className="container-slider">
+  //       <Skeleton
+  //         animation="wave"
+  //         variant="rectangular"
+  //         width="100%"
+  //         height="40vh"
+  //       />
+  //     </div>
+  //   );
+  // }
+  //
+  if (loading) return "loading";
+  dataSlider = res;
   return (
     <div className="container-slider">
       {dataSlider.map((slide, index) => {
@@ -103,6 +124,7 @@ function Slider() {
                 width={"100vw"}
                 height={"40vh"}
               />
+
               {/* <img
                   src={process.env.REACT_APP_UPLOAD_URL + slide.desktop}
                   draggable={false}
@@ -111,6 +133,7 @@ function Slider() {
                   onTouchEnd={onTouchEnd}
                   loading="lazy"
                 /> */}
+
               {/* </picture> */}
             </div>
           </RouterLink>

@@ -34,7 +34,7 @@ const Cat = ({ image, name, slug }) => {
 function HomeCats() {
   const { res, loading, error } = useFetch(`/category/getAll`);
   if (loading) return "در حال بارگذاری";
-  let categories = res.data;
+  let categories = res;
   return (
     <Box display="flex" flexDirection="column" gap={1} alignItems="center">
       <Box mb={3}>
