@@ -15,7 +15,7 @@ function LazyImage({ imageUrl, width, height }) {
   };
 
   return (
-    <Box position="relative">
+    <Box position="relative" borderRadius={2}>
       <LazyLoadImage
         key={imageUrl}
         src={imageUrl}

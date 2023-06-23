@@ -114,27 +114,25 @@ function Slider() {
                 slideIndex === index + 1 ? "slide active-anim" : "slide"
               }
             >
-              {/* <picture>
+              <picture>
                 <source
                   media="(max-width: 650px)"
                   srcSet={process.env.REACT_APP_UPLOAD_URL + slide.mobile}
-                ></source> */}
-              <LazyImage
+                ></source>
+                {/* <LazyImage
                 imageUrl={process.env.REACT_APP_UPLOAD_URL + slide.desktop}
                 width={"100vw"}
                 height={"40vh"}
-              />
-
-              {/* <img
+              /> */}
+                <img
                   src={process.env.REACT_APP_UPLOAD_URL + slide.desktop}
                   draggable={false}
                   onTouchStart={onTouchStart}
                   onTouchMove={onTouchMove}
                   onTouchEnd={onTouchEnd}
                   loading="lazy"
-                /> */}
-
-              {/* </picture> */}
+                />
+              </picture>
             </div>
           </RouterLink>
         );

@@ -9,7 +9,7 @@ function ShowSubCats({ categoryId }) {
   );
 
   if (loading) return "...";
-  const subCategories = res.data;
+  const subCategories = res;
   console.log(subCategories);
   return (
     <Box
