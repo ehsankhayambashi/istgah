@@ -23,6 +23,7 @@ function LazyImage({ imageUrl, width, height }) {
         beforeLoad={handleLoadStarted}
         width={width}
         height={height}
+        effect="blur"
       />
       {!isLoaded && isLoadStarted && (
         // <LazyLoadComponent>
