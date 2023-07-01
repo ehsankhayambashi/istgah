@@ -6,7 +6,6 @@ import useFetch from "../../hooks/useFetch";
 import LazyImage from "../LazyImage/LazyImage";
 
 const Cat = ({ image, name, slug }) => {
-  // console.log("imageUrl", process.env.REACT_APP_UPLOAD_URL + image);
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
       <LazyImage

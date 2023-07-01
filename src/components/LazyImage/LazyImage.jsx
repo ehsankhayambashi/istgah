@@ -6,11 +6,11 @@ import { Box } from "@mui/material";
 function LazyImage({ imageUrl, width, height }) {
   const [isLoaded, setLoaded] = useState(false);
   const [isLoadStarted, setLoadStarted] = useState(false);
+
   const handleLoad = () => {
     setLoaded(true);
   };
   const handleLoadStarted = () => {
-    console.log("Started: ");
     setLoadStarted(true);
   };
 
@@ -23,7 +23,6 @@ function LazyImage({ imageUrl, width, height }) {
         beforeLoad={handleLoadStarted}
         width={width}
         height={height}
-        effect="blur"
       />
       {!isLoaded && isLoadStarted && (
         // <LazyLoadComponent>

@@ -10,7 +10,6 @@ function ShowSubCats({ categoryId }) {
 
   if (loading) return "...";
   const subCategories = res;
-  console.log(subCategories);
   return (
     <Box
       sx={{
