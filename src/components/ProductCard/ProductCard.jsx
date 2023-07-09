@@ -67,7 +67,9 @@ function ProductCard({ product }) {
               justifyContent="center"
             >
               <LazyImage
-                imageUrl={process.env.REACT_APP_UPLOAD_URL + product.image?.url}
+                imageUrl={
+                  process.env.REACT_APP_UPLOAD_URL + product?.image?.orginal
+                }
                 width={biggerThanSm ? 200 : 115}
                 height={biggerThanSm ? 200 : 115}
               />

@@ -15,7 +15,7 @@ function ProductColor({ attributes, type }) {
   const handleChangeValue = (e, newValue) => {
     setValue(newValue);
   };
-  const test = () => {
+  const checkValue = () => {
     if (value != null) {
       return value;
     } else {
@@ -64,10 +64,10 @@ function ProductColor({ attributes, type }) {
                   border={1}
                   borderColor="GrayText"
                 >
-                  {color === test() ? (
+                  {color === checkValue() ? (
                     <FiCheck
                       fontSize="20px"
-                      color={test().name === "مشکی" ? "white" : "black"}
+                      color={checkValue().name === "مشکی" ? "white" : "black"}
                     />
                   ) : null}
                 </Box>
@@ -84,7 +84,7 @@ function ProductColor({ attributes, type }) {
         <Divider sx={{ marginTop: 1 }} />
         <Box mb={1} mt={1.5}>
           <Typography fontSize="0.9rem" variant="body1" component="p">
-            {`${type} : ${value.name}`}
+            {`${type} : ${value ? value.name : attributes[0].name}`}
           </Typography>
         </Box>
         <Box
@@ -99,7 +99,7 @@ function ProductColor({ attributes, type }) {
         >
           <ToggleButtonGroup
             color="primary"
-            value={value}
+            value={value ? value : attributes[0]}
             exclusive
             onChange={handleChangeValue}
             sx={{ maxWidth: "300px", display: "block" }}
@@ -133,10 +133,10 @@ function ProductColor({ attributes, type }) {
                   borderColor="GrayText"
                   ml={1}
                 >
-                  {attribute === value ? (
+                  {attribute === checkValue() ? (
                     <FiCheck
                       fontSize="20px"
-                      color={value.name === "مشکی" ? "white" : "black"}
+                      color={checkValue().name === "مشکی" ? "white" : "black"}
                     />
                   ) : null}
                 </Box>

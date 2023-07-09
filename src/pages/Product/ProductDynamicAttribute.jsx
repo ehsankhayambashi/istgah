@@ -8,7 +8,7 @@ function ProductDynamicAttribute({ product, type }) {
   switch (type) {
     case "رنگ":
       return <ProductColor attributes={product.colors} type={type} />;
-    case "نوع آسیاب":
+    case "آسیاب":
       return <ProductProperty attributes={product.grinds} type={type} />;
     case "وزن":
       return <ProductProperty attributes={product.weights} type={type} />;
