@@ -1,19 +1,15 @@
 import React from "react";
 import { Box, Button, useMediaQuery, Typography } from "@mui/material";
 import { theme } from "../../Theme";
-function calDiscountPercent(price, discountedPrice) {
-  if (discountedPrice) {
-    return (((price - discountedPrice) * 100) / price).toFixed() + "%";
-  }
-}
-function formatMoney(number) {
-  const formattedNumber = number.toLocaleString("fa-IR", {
-    useGrouping: true,
-    minimumFractionDigits: 0,
-  });
-  console.log(formattedNumber);
-  return formattedNumber;
-}
+import { calDiscountPercent, formatMoney } from "../../hooks/numberUtils";
+
+// function formatMoney(number) {
+//   const formattedNumber = number.toLocaleString("fa-IR", {
+//     useGrouping: true,
+//     minimumFractionDigits: 0,
+//   });
+//   return formattedNumber;
+// }
 function ProductInfoCardMobile({ product }) {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
   if (mobileVersion) {
@@ -54,7 +50,7 @@ function ProductInfoCardMobile({ product }) {
                   // textDecorationSkipInk: "none",
                 }}
                 color="grey.500"
-                variant="caption"
+                // variant="subtitle2"
               >
                 {formatMoney(product.price)}
               </Typography>
@@ -76,10 +72,16 @@ function ProductInfoCardMobile({ product }) {
                 </Typography>
               </Box>
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="end" mb={1}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="end"
+              mb={1}
+              gap={0.5}
+            >
               <Typography
                 sx={{ fontSize: "1.2rem" }}
-                variant="subtitle2"
+                variant="body2"
                 component="span"
               >
                 {product.discountedPrice

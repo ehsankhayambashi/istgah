@@ -1,8 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   products: [],
-  color: { name: "blue" },
+  color: {},
+  weight: {},
+  grind: {},
 };
 
 const cartSlice = createSlice({
@@ -12,10 +14,10 @@ const cartSlice = createSlice({
     addToCart: (cart, action) => {
       const product = cart.products.find(
         (product) =>
-          product.id === action.payload.id &&
-          product.color.name === action.payload.color.name &&
-          product.grind.name === action.payload.grind.name &&
-          product.weight.name === action.payload.weight.name
+          product?.id === action.payload?.id &&
+          product?.color?.id === action.payload?.color?.id &&
+          product?.grind?.id === action.payload?.grind?.id &&
+          product?.weight?.id === action.payload?.weight?.id
       );
       if (product) {
         //yani ghablan to cart bude baiad tedadesh ziad she
@@ -28,20 +30,22 @@ const cartSlice = createSlice({
     incrementQuantity: (cart, action) => {
       const product = cart.products.find(
         (product) =>
-          product.id === action.payload.id &&
-          product.color.name === action.payload.color.name &&
-          product.grind.name === action.payload.grind.name &&
-          product.weight.name === action.payload.weight.name
+          product?.id === action.payload?.id &&
+          product?.color?.id === action.payload?.color?.id &&
+          product?.grind?.id === action.payload?.grind?.id &&
+          product?.weight?.id === action.payload?.weight?.id
       );
-      product.quantity++;
+      if (product) {
+        product.quantity++;
+      }
     },
     decrementQuantity: (cart, action) => {
       const product = cart.products.find(
         (product) =>
-          product.id === action.payload.id &&
-          product.color.name === action.payload.color.name &&
-          product.grind.name === action.payload.grind.name &&
-          product.weight.name === action.payload.weight.name
+          product?.id === action.payload?.id &&
+          product?.color?.id === action.payload?.color?.id &&
+          product?.grind?.id === action.payload?.grind?.id &&
+          product?.weight?.id === action.payload?.weight?.id
       );
       if (product.quantity === 0) {
         product.quantity = 0;
@@ -50,29 +54,41 @@ const cartSlice = createSlice({
       }
     },
     removeItem: (cart, action) => {
-      cart.products = cart.products.filter(
-        (product) =>
-          product.id !== action.payload.id &&
-          product.color.name !== action.payload.color.name &&
-          product.grind.name !== action.payload.grind.name &&
-          product.weight.name !== action.payload.weight.name
+      const { productId, colorId, grindId, weightId } = action.payload;
+      const filtereds = cart.products.filter(
+        (item) =>
+          !(
+            item?.id === productId &&
+            item?.grind?.id === grindId &&
+            item?.weight?.id === weightId &&
+            item?.color?.id === colorId
+          )
       );
+      cart.products = filtereds;
     },
     clearCart: (cart) => {
       cart.products = [];
     },
     colorUpdate: (cart, action) => {
-      cart.color.name = action.payload;
+      cart.color = action.payload;
+    },
+    weightUpdate: (cart, action) => {
+      cart.weight = action.payload;
+    },
+    grindUpdate: (cart, action) => {
+      cart.grind = action.payload;
     },
   },
 });
 
 export const {
-  addItem,
+  addToCart,
   removeItem,
   clearCart,
   incrementQuantity,
   decrementQuantity,
   colorUpdate,
+  weightUpdate,
+  grindUpdate,
 } = cartSlice.actions;
 export default cartSlice.reducer;

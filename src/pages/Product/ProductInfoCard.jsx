@@ -1,12 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Divider, Typography, Button, useMediaQuery } from "@mui/material";
 import { BiCoffeeTogo } from "react-icons/bi";
 import { FiTruck } from "react-icons/fi";
 import { theme } from "../../Theme";
+import {
+  calDiscountPercent,
+  formatMoney,
+  GetProductType,
+} from "../../hooks/numberUtils";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../store/cartReducer";
+import CounterCart from "../../components/Cart/CounterCart";
 
-function ProductInfoCard({ product }) {
+function ProductInfoCard({ product, productId }) {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
+  let dynamicType = GetProductType(product.product_types);
+  const dispatch = useDispatch();
+  const grind = useSelector((state) => state.cart.grind);
+  const color = useSelector((state) => state.cart.color);
+  const weight = useSelector((state) => state.cart.weight);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const products = useSelector((state) => state.cart.products);
 
+  useEffect(() => {
+    const findProduct = products.find(
+      (item) =>
+        item?.id == productId &&
+        item?.color?.id == color?.id &&
+        item?.grind?.id == grind?.id &&
+        item?.weight?.id == weight?.id
+    );
+    setCurrentProduct(findProduct);
+  }, [products, color, weight, grind]);
+
+  const addProduct = (product) => {
+    dispatch(
+      addToCart({
+        id: product.id,
+        name: product.name,
+        image: process.env.REACT_APP_UPLOAD_URL + product.image,
+        price: dynamicType?.price ? dynamicType?.price : product?.price,
+        discountedPrice: dynamicType?.discountedPrice
+          ? dynamicType?.discountedPrice
+          : product?.discountedPrice,
+        color: color,
+        grind: grind,
+        weight: weight,
+      })
+    );
+  };
   const ForDesktop = () => {
     return (
       <Box
@@ -50,7 +92,7 @@ function ProductInfoCard({ product }) {
           </Box>
         </Box>
         <Divider />
-        {product.discount ? (
+        {dynamicType?.discountedPrice || product?.discountedPrice ? (
           <Box mt={1} display="flex" justifyContent="space-between">
             <Box visibility="hidden">.</Box>
             <Box display="flex" alignItems="center">
@@ -59,7 +101,11 @@ function ProductInfoCard({ product }) {
                 pl={0.5}
                 display="flex"
                 justifyContent="end"
-                visibility={product.discount ? "visible" : "hidden"}
+                visibility={
+                  dynamicType?.discountedPrice || product?.discountedPrice
+                    ? "visible"
+                    : "hidden"
+                }
               >
                 <Typography
                   sx={{
@@ -70,9 +116,11 @@ function ProductInfoCard({ product }) {
                     // textDecorationSkipInk: "none",
                   }}
                   color="grey.500"
-                  variant="caption"
+                  variant="subtitle1"
                 >
-                  {product.price}
+                  {formatMoney(
+                    dynamicType?.price ? dynamicType?.price : product?.price
+                  )}
                 </Typography>
               </Box>
               <Box
@@ -81,32 +129,63 @@ function ProductInfoCard({ product }) {
                 alignItems="center"
                 bgcolor="red"
                 px={1}
-                display={product.discount ? "flex" : "none"}
+                display={
+                  dynamicType?.discountedPrice || product?.discountedPrice
+                    ? "flex"
+                    : "none"
+                }
               >
                 <Typography
                   sx={{ fontSize: "10px" }}
                   color="white"
                   variant="caption"
                 >
-                  {product.discount + "%"}
+                  {calDiscountPercent(
+                    dynamicType?.price ? dynamicType?.price : product?.price,
+                    dynamicType?.discountedPrice
+                      ? dynamicType?.discountedPrice
+                      : product?.discountedPrice
+                  )}
                 </Typography>
               </Box>
             </Box>
           </Box>
         ) : null}
-        <Box display="flex" alignItems="center" justifyContent="end" mb={1}>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          mb={1}
+          gap={0.5}
+        >
           <Typography
             sx={{ fontSize: "1.2rem" }}
-            variant="subtitle2"
+            variant="body2"
             component="span"
           >
-            {product.discount ? product.discountedPrice : product.price}
+            {dynamicType?.discountedPrice || product?.discountedPrice
+              ? formatMoney(
+                  dynamicType?.discountedPrice
+                    ? dynamicType?.discountedPrice
+                    : product?.discountedPrice
+                )
+              : formatMoney(
+                  dynamicType?.price ? dynamicType?.price : product?.price
+                )}
           </Typography>
           <Typography sx={{ fontSize: "0.7rem" }} component="span">
             تومان
           </Typography>
         </Box>
-        <Button variant="contained">افزودن به سبد</Button>
+        {currentProduct?.quantity >= 1 ? (
+          <Box px={6}>
+            <CounterCart product={currentProduct} />
+          </Box>
+        ) : (
+          <Button variant="contained" onClick={() => addProduct(product)}>
+            افزودن به سبد
+          </Button>
+        )}
       </Box>
     );
   };
