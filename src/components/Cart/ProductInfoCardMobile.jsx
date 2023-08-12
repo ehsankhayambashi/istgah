@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Button, useMediaQuery, Typography } from "@mui/material";
+import { Box, Button, useMediaQuery, Typography, Link } from "@mui/material";
 import { theme } from "../../Theme";
-
-function ProductInfoCardMobile({ product }) {
+import { Link as RouterLink } from "react-router-dom";
+function ProductInfoCardMobile({ cartPrice }) {
   const mobileVersion = useMediaQuery(theme.breakpoints.down("md"));
   if (mobileVersion) {
     return (
@@ -25,13 +25,15 @@ function ProductInfoCardMobile({ product }) {
           px={2}
           height="100%"
         >
-          <Button
-            variant="contained"
-            sx={{ paddingX: 6, paddingY: 1.3, borderRadius: 2 }}
-            size="large"
-          >
-            ثبت سفارش
-          </Button>
+          <Link to="/checkout" component={RouterLink} underline="none">
+            <Button
+              variant="contained"
+              sx={{ paddingX: 6, paddingY: 1.3, borderRadius: 2 }}
+              size="large"
+            >
+              ثبت سفارش
+            </Button>
+          </Link>
           <Box display="flex" flexDirection="column">
             <Box
               position="relative"
@@ -55,7 +57,7 @@ function ProductInfoCardMobile({ product }) {
               mb={1}
             >
               <Typography variant="subtitle1" component="span">
-                ۴۰,۳۰۰
+                {cartPrice}
               </Typography>
               <Typography sx={{ fontSize: "0.7rem" }} component="span">
                 تومان

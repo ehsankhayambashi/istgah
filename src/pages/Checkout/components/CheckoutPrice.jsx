@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { theme } from "../../../Theme";
 
-function CheckoutPrice({ itemNumber }) {
+function CheckoutPrice({ itemNumber, rawPrice, cartPrice, discountedPrice }) {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Box
@@ -33,7 +33,7 @@ function CheckoutPrice({ itemNumber }) {
           color={theme.palette.grey[800]}
           fontSize="0.8rem"
         >
-          1000000 تومان
+          {rawPrice} تومان
         </Typography>
       </Box>
       <Divider />
@@ -51,7 +51,22 @@ function CheckoutPrice({ itemNumber }) {
           color={theme.palette.grey[800]}
           fontSize="0.8rem"
         >
-          19,000 تومان
+          ۱۹,۰۰۰ تومان
+        </Typography>
+      </Box>
+      <Divider display={discountedPrice ? "block" : "none"} />
+      <Box
+        display={discountedPrice ? "flex" : "none"}
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        color="red"
+      >
+        <Typography variant="subtitle1" fontSize="0.8rem" color="red">
+          سود شما از خرید
+        </Typography>
+        <Typography variant="body2" color="red" fontSize="0.8rem">
+          {discountedPrice} تومان
         </Typography>
       </Box>
       <Divider />
@@ -69,9 +84,10 @@ function CheckoutPrice({ itemNumber }) {
           color={theme.palette.grey[800]}
           fontSize="0.8rem"
         >
-          30,000,000 تومان
+          {cartPrice} تومان
         </Typography>
       </Box>
+
       <Box
         display={biggerThanMd ? "flex" : "none"}
         flexDirection="row"
