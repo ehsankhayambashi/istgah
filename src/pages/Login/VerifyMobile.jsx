@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function VerifyMobile({ setReadyVerifyForm, mobileNumber }) {
-  const TIME = 10;
+  const TIME = 180;
   const [count, setCount] = useState(TIME);
   const { postData, isLoading, error, result } = usePostData();
   const navigate = useNavigate();
