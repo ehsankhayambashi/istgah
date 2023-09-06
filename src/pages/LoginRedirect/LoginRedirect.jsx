@@ -1,3 +1,6 @@
+// import { Alert, Snackbar } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -12,6 +15,7 @@ function LoginRedirect() {
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const providerName = params.providerName;
   const backUrl = useSelector((state) => state.urlManager.backUrl);
   const [text, setText] = useState("Loading...");
@@ -32,11 +36,21 @@ function LoginRedirect() {
         localStorage.setItem("jwt", res.jwt);
         localStorage.setItem("username", res.user.username);
         //show toast
+        enqueueSnackbar(
+          <Alert variant="filled" severity="success">
+            <Typography>ورود با موفقیت انجام شد</Typography>
+          </Alert>
+        );
         navigate(backUrl);
       })
       .catch((err) => {
         console.log(err);
         //show toast
+        enqueueSnackbar(
+          <Alert variant="filled" severity="error">
+            <Typography>ورود با خطا مواجه شد</Typography>
+          </Alert>
+        );
         navigate("/login");
       });
   }, []);

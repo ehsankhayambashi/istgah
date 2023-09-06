@@ -17,12 +17,14 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setBackUrl } from "../../store/urlReducer";
+import usePostData from "../../hooks/usePostData";
 
 function SendMobile({ setReadyVerifyForm, handleMobileNumber }) {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
   const [github, setGithub] = useState(false);
   const [google, setGoogle] = useState(false);
   const location = useLocation();
+  const { postData, isLoading, error, result } = usePostData();
   const styles = (theme) => ({
     thaiTextFieldInputProps: {
       paddingTop: "1rem",
@@ -41,6 +43,13 @@ function SendMobile({ setReadyVerifyForm, handleMobileNumber }) {
   const handleSubmit = (values) => {
     //send mobile number to server
     //show verify form to user
+
+    const mobileNumber = values.mobile;
+
+    const dataToSend = { data: { mobileNumber: mobileNumber } };
+    postData("/mobile/getMobile", dataToSend);
+    console.log("result", result);
+    console.log("error", error);
     handleMobileNumber(values.mobile);
     setReadyVerifyForm(true);
   };
@@ -58,7 +67,7 @@ function SendMobile({ setReadyVerifyForm, handleMobileNumber }) {
         flexDirection="column"
         gap={2}
         px={biggerThanMd ? 3 : 0}
-        height="60vh"
+        // height="60vh"
         width={biggerThanMd ? "350px" : "100%"}
         border={biggerThanMd ? 1 : 0}
         borderRadius={2}
@@ -134,6 +143,7 @@ function SendMobile({ setReadyVerifyForm, handleMobileNumber }) {
         {/* sign in buttons */}
         <Box
           gap={1}
+          pb={1}
           display="flex"
           flexDirection={biggerThanMd ? "row" : "column"}
           justifyContent="space-between"

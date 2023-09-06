@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Grid,
@@ -6,25 +7,87 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import BackButton from "../components/BackButton";
 import { theme } from "../../../Theme";
 import { Field, Form, Formik } from "formik";
+import jwt_decode from "jwt-decode";
+import useFetch from "../../../hooks/useFetch";
 //rtl
 import { CacheProvider } from "@emotion/react";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import createCache from "@emotion/cache";
 import { presonalInfoSchema } from "../../../schemas";
+import usePostData from "../../../hooks/usePostData";
+import { useSnackbar } from "notistack";
+
 function PersonalInfo() {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+  const { enqueueSnackbar } = useSnackbar();
+  const jwt = localStorage.getItem("jwt");
+  let userId = null;
+  try {
+    const decoded = jwt_decode(jwt);
+    userId = decoded.id;
+  } catch (error) {
+    console.log(error);
+  }
+  const { res, loading, error } = useFetch(`/users/${userId}`);
+  const {
+    postData,
+    isLoading,
+    error: postError,
+    result,
+    statusRequset,
+  } = usePostData();
+  useEffect(() => {
+    if (statusRequset >= 200 && statusRequset < 300) {
+      //show toast
+      enqueueSnackbar(
+        <Alert variant="filled" severity="success">
+          <Typography>تغییرات با موفقیت اعمال شد</Typography>
+        </Alert>
+      );
+    }
+  }, [statusRequset]);
+  const checkEmailisValid = (email, username) => {
+    const emailId = email.substring(0, email.indexOf("@"));
+    if (emailId === username) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+  if (loading) return "";
+  if (!loading && res?.error?.status > 400) {
+    localStorage.removeItem("jwt");
+    window.location.reload(false);
+  }
+  if (res.data === null) return "";
+  const user = res;
   const onSubmit = (values, errors) => {
-    console.log(values);
+    let updatedUser;
+    if (values.email) {
+      updatedUser = {
+        firstName: values.name,
+        lastName: values.family,
+        email: values.email,
+      };
+    } else {
+      updatedUser = {
+        firstName: values.name,
+        lastName: values.family,
+      };
+    }
+
+    postData(`/users/${user.id}`, updatedUser, "PUT");
   };
   const cacheRtl = createCache({
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
+
   return (
     <Box display="flex" flexDirection="column" p={2} gap={1}>
       <Box display={biggerThanMd ? "none" : "block"}>
@@ -41,10 +104,10 @@ function PersonalInfo() {
       </Box>
       <Formik
         initialValues={{
-          name: "",
-          family: "",
-          email: "",
-          mobile: "09194209344",
+          name: user.firstName ? user.firstName : "",
+          family: user.lastName ? user.lastName : "",
+          email: checkEmailisValid(user.email, user.username) ? user.email : "",
+          mobile: user.username,
         }}
         validationSchema={presonalInfoSchema}
         onSubmit={onSubmit}
