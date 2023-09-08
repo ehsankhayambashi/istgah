@@ -148,16 +148,18 @@ function Navbar() {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography
-                  variant="body1"
-                  fontSize="1.3rem"
-                  component="div"
-                  sx={{
-                    color: (theme) => theme.palette.primary.main,
-                  }}
-                >
-                  کافه ایستگاه
-                </Typography>
+                <Link to="/" component={RouterLink} color="inherit">
+                  <Typography
+                    variant="body1"
+                    fontSize="1.3rem"
+                    component="div"
+                    sx={{
+                      color: (theme) => theme.palette.primary.main,
+                    }}
+                  >
+                    کافه ایستگاه
+                  </Typography>
+                </Link>
                 <IconButton
                   size="inherit"
                   sx={{
@@ -181,25 +183,27 @@ function Navbar() {
                     width: { xs: "100%" },
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: { xs: "none", md: "flex" },
-                      color: (theme) => theme.palette.common.black,
-                    }}
-                    alignItems="center"
-                    gap={1}
-                  >
-                    <Box width="40px" mr={-0.3}>
-                      <img width="100%" src={logo} alt="لوگوی کافه ایستگاه" />
-                    </Box>
-                    <Typography
-                      variant="body2"
-                      fontSize="1.5rem"
-                      component="div"
+                  <Link to="/" component={RouterLink} color="inherit">
+                    <Box
+                      sx={{
+                        display: { xs: "none", md: "flex" },
+                        color: (theme) => theme.palette.common.black,
+                      }}
+                      alignItems="center"
+                      gap={1}
                     >
-                      کافه ایستگاه
-                    </Typography>
-                  </Box>
+                      <Box width="40px" mr={-0.3}>
+                        <img width="100%" src={logo} alt="لوگوی کافه ایستگاه" />
+                      </Box>
+                      <Typography
+                        variant="body2"
+                        fontSize="1.5rem"
+                        component="div"
+                      >
+                        کافه ایستگاه
+                      </Typography>
+                    </Box>
+                  </Link>
                   <Search placeholder="جستجو" />
                 </Box>
                 <Box display="flex" gap={1}>

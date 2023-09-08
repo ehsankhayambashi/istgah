@@ -21,6 +21,7 @@ function usePostData() {
       });
 
       if (!response.ok) {
+        setStatusRequset(response.status);
         throw new Error("Request failed");
       }
       setStatusRequset(response.status);
