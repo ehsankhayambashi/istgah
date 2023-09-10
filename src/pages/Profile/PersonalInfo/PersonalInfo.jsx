@@ -24,21 +24,27 @@ import { useSnackbar } from "notistack";
 import Loading from "../../../components/Loading/Loading";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAuth } from "../../../hooks/useAuth";
 
 function PersonalInfo() {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
   const navigate = useNavigate();
   const backUrl = useSelector((state) => state.urlManager.backUrl);
   const { enqueueSnackbar } = useSnackbar();
+
   const jwt = localStorage.getItem("jwt");
+  let jwtErrorMessage = null;
   let userId = null;
   try {
     const decoded = jwt_decode(jwt);
     userId = decoded.id;
   } catch (error) {
-    console.log(error);
+    jwtErrorMessage = error.message;
+    console.log("error", error);
   }
-  const { res, loading, error } = useFetch(`/users/${userId}`);
+  const { res, loading, error } = useFetch(
+    `/users/${userId}?fields[0]=firstName&fields[1]=lastName&fields[2]=username&fields[3]=email`
+  );
 
   const {
     postData,
@@ -81,7 +87,7 @@ function PersonalInfo() {
     }
   };
   if (loading || isLoading) return <Loading />;
-  if (!loading && res?.error?.status > 400) {
+  if ((!loading && res?.error?.status > 400) || jwtErrorMessage) {
     localStorage.removeItem("jwt");
     window.location.reload(false);
   }
