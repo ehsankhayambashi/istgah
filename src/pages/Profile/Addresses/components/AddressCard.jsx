@@ -1,5 +1,5 @@
-import { Box, Divider, Typography } from "@mui/material";
-import React from "react";
+import { Box, Divider, Menu, MenuItem, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import {
   BsThreeDotsVertical,
   BsSignpost2,
@@ -8,8 +8,33 @@ import {
 } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { theme } from "../../../../Theme";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import usePostData from "../../../../hooks/usePostData";
 
-function AddressCard({ address, state, postalCode, mobile, name }) {
+function AddressCard({ address, state, postalCode, mobile, name, id }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { result, error, isLoading, postData, statusRequset } = usePostData();
+  // useEffect(() => {
+  //   if (result?.data?.id === id) {
+  //     window.location.reload(false);
+  //   }
+  // }, [result != null]);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleDelete = () => {
+    console.log("delete");
+    postData(`/addresses/${id}`, null, "DELETE");
+    handleClose();
+  };
+  const handleEdit = () => {
+    console.log("edit");
+    handleClose();
+  };
   return (
     <Box
       display="flex"
@@ -62,13 +87,26 @@ function AddressCard({ address, state, postalCode, mobile, name }) {
               <Typography>{name}</Typography>
             </Box>
           </Box>
-          {/* <Box>map</Box> */}
         </Box>
         <Divider />
       </Box>
-      <Box>
-        <BsThreeDotsVertical size={22} />
+      <Box sx={{ cursor: "pointer" }}>
+        <BsThreeDotsVertical size={22} onClick={handleClick} />
       </Box>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <MenuItem onClick={handleEdit}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <FaEdit color="green" />
+            <Typography>ویرایش</Typography>
+          </Box>
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <FaTrashAlt color="red" />
+            <Typography>حذف</Typography>
+          </Box>
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }

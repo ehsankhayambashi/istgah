@@ -23,9 +23,12 @@ import { addressSchema } from "../../../../schemas/index";
 import usePostData from "../../../../hooks/usePostData";
 import jwt_decode from "jwt-decode";
 import Loading from "../../../../components/Loading/Loading";
+import { useDispatch } from "react-redux";
+import { addAddress } from "../../../../store/addressReducer";
 
 function AddressForm({ setShowForm, location, handleCloseMap }) {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+  const dispatch = useDispatch();
   const {
     postData,
     isLoadingAddress,
@@ -45,43 +48,14 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
     console.log("error", error);
   }
 
-  useEffect(() => {
-    console.log("addressResult", addressResult);
-    if (addressResult?.data?.id) {
-      const selectedAddress = {
-        selectedAddress: addressResult.data.id,
-      };
-      postData(`/users/${userId}`, selectedAddress, "PUT");
-    }
-  }, [addressResult]);
-  // if (loading || isLoadingAddress) return <Loading />;
-  // if ((!loading && res?.error?.status > 400) || jwtErrorMessage) {
-  //   localStorage.removeItem("jwt");
-  //   window.location.reload(false);
-  // }
-  // if (res.data === null) return "";
-  const onSubmit = (values, errors) => {
-    const addressOpject = {
-      data: {
-        address: values.address,
-        state: values.state.id,
-        city: values.city.id,
-        pelak: values.unit,
-        unit: values.vahed,
-        postalCode: values.postalCode,
-        longitude: values.location.lng.toString(),
-        latitude: values.location.lat.toString(),
-        users_permissions_user: userId,
-      },
-    };
-    postData("/addresses", addressOpject);
-    handleCloseMap();
-  };
-  const cacheRtl = createCache({
-    key: "muirtl",
-    stylisPlugins: [prefixer, rtlPlugin],
-  });
-
+  // useEffect(() => {
+  //   if (addressResult?.data?.id) {
+  //     const selectedAddress = {
+  //       selectedAddress: addressResult.data.id,
+  //     };
+  //     postData(`/users/${userId}`, selectedAddress, "PUT");
+  //   }
+  // }, [addressResult]);
   const allStates = [
     {
       id: 1,
@@ -1488,6 +1462,35 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
     return allCities.find((item, index) => item.id === stateId).cities;
   };
   const [cities, setCities] = useState(findCities(8));
+
+  if (isLoadingAddress) return <Loading />;
+  if (jwtErrorMessage) {
+    localStorage.removeItem("jwt");
+    window.location.reload(false);
+  }
+
+  const onSubmit = (values, errors) => {
+    const addressOpject = {
+      data: {
+        address: values.address,
+        state: values.state,
+        city: values.city,
+        pelak: values.unit,
+        unit: values.vahed,
+        postalCode: values.postalCode,
+        longitude: values.location.lng.toString(),
+        latitude: values.location.lat.toString(),
+        users_permissions_user: userId,
+      },
+    };
+    dispatch(addAddress(addressOpject));
+    postData("/addresses", addressOpject);
+    // window.location.reload(false);
+  };
+  const cacheRtl = createCache({
+    key: "muirtl",
+    stylisPlugins: [prefixer, rtlPlugin],
+  });
 
   return (
     <>
