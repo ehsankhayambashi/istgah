@@ -23,15 +23,19 @@ import { addressSchema } from "../../../../schemas/index";
 import usePostData from "../../../../hooks/usePostData";
 import jwt_decode from "jwt-decode";
 import Loading from "../../../../components/Loading/Loading";
-import { useDispatch } from "react-redux";
-import { addAddress } from "../../../../store/addressReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { addAddress, getAddressById } from "../../../../store/addressReducer";
 
 function AddressForm({ setShowForm, location, handleCloseMap }) {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+  const addresses = useSelector((state) => state.address.addresses);
+  const addressId = useSelector((state) => state.address.id);
   const dispatch = useDispatch();
+  const address = addresses.find((item) => item.id == addressId);
+  console.log(address);
   const {
     postData,
-    isLoadingAddress,
+    isLoading,
     error: addressError,
     result: addressResult,
     statusRequset: addressStatus,
@@ -48,14 +52,25 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
     console.log("error", error);
   }
 
-  // useEffect(() => {
-  //   if (addressResult?.data?.id) {
-  //     const selectedAddress = {
-  //       selectedAddress: addressResult.data.id,
-  //     };
-  //     postData(`/users/${userId}`, selectedAddress, "PUT");
-  //   }
-  // }, [addressResult]);
+  useEffect(() => {
+    if (addressResult?.data?.id) {
+      handleCloseMap();
+      //   const selectedAddress = {
+      //     selectedAddress: addressResult.data.id,
+      //   };
+      //   postData(`/users/${userId}`, selectedAddress, "PUT");
+      // }
+      // dispatch(addAddress(addAddress.data));
+      const addressId = addressResult?.data.id;
+      let addressObj = addressResult?.data.attributes;
+      addressObj["id"] = addressId;
+      // const newAddress = {
+      //   id: addressId,
+      //   addressObj,
+      // };
+      dispatch(addAddress(addressObj));
+    }
+  }, [addressResult]);
   const allStates = [
     {
       id: 1,
@@ -1463,14 +1478,14 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
   };
   const [cities, setCities] = useState(findCities(8));
 
-  if (isLoadingAddress) return <Loading />;
+  if (isLoading) return <Loading />;
   if (jwtErrorMessage) {
     localStorage.removeItem("jwt");
     window.location.reload(false);
   }
 
   const onSubmit = (values, errors) => {
-    const addressOpject = {
+    const addressObject = {
       data: {
         address: values.address,
         state: values.state,
@@ -1483,9 +1498,8 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
         users_permissions_user: userId,
       },
     };
-    dispatch(addAddress(addressOpject));
-    postData("/addresses", addressOpject);
-    // window.location.reload(false);
+
+    postData("/addresses", addressObject);
   };
   const cacheRtl = createCache({
     key: "muirtl",

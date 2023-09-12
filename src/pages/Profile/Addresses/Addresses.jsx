@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiLocationPlus } from "react-icons/bi";
 import AddressModal from "./components/AddressModal";
 import useGeolocation from "../../../hooks/useGeolocation";
@@ -27,7 +27,8 @@ function Addresses() {
   const { latitude, longitude } = useGeolocation();
   const [location, setLocation] = useState(null);
   const dispatch = useDispatch();
-  // const addresses = useSelector((state) => state.address.addresses);
+  const addresses = useSelector((state) => state.address.addresses);
+
   const jwt = localStorage.getItem("jwt");
   let jwtErrorMessage = null;
   let userId = null;
@@ -41,14 +42,15 @@ function Addresses() {
   const { res, loading, error } = useFetch(
     `/users/${userId}?fields[0]=firstName&fields[1]=lastName&fields[2]=username&fields[3]=email&fields[4]=selectedAddress&populate[0]=addresses`
   );
+
   if (loading) return <Loading />;
   if ((!loading && res?.error?.status > 400) || jwtErrorMessage) {
     localStorage.removeItem("jwt");
     window.location.reload(false);
   }
   const userName = `${res?.firstName} ${res?.lastName}`;
-  // dispatch(setAddress(res?.addresses.reverse()));
-  const addresses = res?.addresses.reverse();
+
+  // const addresses = res?.addresses.reverse();
   const mobile = res?.username;
   const handleOpenMap = () => {
     setOpenMap(true);
@@ -142,6 +144,7 @@ function Addresses() {
             postalCode={address.postalCode}
             mobile={mobile}
             name={userName}
+            handleOpenMap={handleOpenMap}
           />
         ))}
       </Box>
