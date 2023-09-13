@@ -32,7 +32,6 @@ function AddressForm({ setShowForm, location, handleCloseMap }) {
   const addressId = useSelector((state) => state.address.id);
   const dispatch = useDispatch();
   const address = addresses.find((item) => item.id == addressId);
-  console.log(address);
   const {
     postData,
     isLoading,

@@ -18,16 +18,29 @@ import jwt_decode from "jwt-decode";
 import useFetch from "../../../hooks/useFetch";
 import Loading from "../../../components/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { setAddress } from "../../../store/addressReducer";
+import { getAddressId, setAddress } from "../../../store/addressReducer";
 
 function Addresses() {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+  const addresses = useSelector((state) => state.address.addresses);
+  const addressId = useSelector((state) => state.address.id);
   const [openMap, setOpenMap] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const { latitude, longitude } = useGeolocation();
+  let { latitude, longitude } = useGeolocation();
   const [location, setLocation] = useState(null);
+  let latLong;
+  useEffect(() => {
+    if (addressId != null) {
+      const address = addresses.find((item) => item.id == addressId);
+      latLong = {
+        lat: parseFloat(address.latitude),
+        lng: parseFloat(address.longitude),
+      };
+      setLocation(latLong);
+    }
+  }, [addressId]);
   const dispatch = useDispatch();
-  const addresses = useSelector((state) => state.address.addresses);
+  // const addresses = useSelector((state) => state.address.addresses);
 
   const jwt = localStorage.getItem("jwt");
   let jwtErrorMessage = null;
@@ -52,6 +65,11 @@ function Addresses() {
 
   // const addresses = res?.addresses.reverse();
   const mobile = res?.username;
+  const handleNewAddress = () => {
+    handleOpenMap();
+    setLocation(null);
+    dispatch(getAddressId(null));
+  };
   const handleOpenMap = () => {
     setOpenMap(true);
     setShowForm(false);
@@ -71,7 +89,7 @@ function Addresses() {
         <Button
           variant="contained"
           size="large"
-          onClick={() => handleOpenMap()}
+          onClick={() => handleNewAddress()}
           sx={{ paddingY: "0.9rem", borderRadius: "2rem" }}
         >
           ثبت آدرس جدید
@@ -102,7 +120,7 @@ function Addresses() {
             />
           }
           size="large"
-          onClick={() => handleOpenMap()}
+          onClick={() => handleNewAddress()}
         >
           ثبت آدرس جدید
         </Button>
@@ -141,6 +159,8 @@ function Addresses() {
             id={address.id}
             state={address.city.label}
             address={address.address}
+            // setLocation={setLocation}
+            // latLong={latLong}
             postalCode={address.postalCode}
             mobile={mobile}
             name={userName}
