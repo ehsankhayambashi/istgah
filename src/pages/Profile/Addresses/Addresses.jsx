@@ -28,17 +28,17 @@ function Addresses() {
   const [showForm, setShowForm] = useState(false);
   let { latitude, longitude } = useGeolocation();
   const [location, setLocation] = useState(null);
-  let latLong;
+
   useEffect(() => {
     if (addressId != null) {
       const address = addresses.find((item) => item.id == addressId);
-      latLong = {
+      let latLong = {
         lat: parseFloat(address.latitude),
         lng: parseFloat(address.longitude),
       };
       setLocation(latLong);
     }
-  }, [addressId]);
+  }, [addressId, openMap]);
   const dispatch = useDispatch();
   // const addresses = useSelector((state) => state.address.addresses);
 
@@ -157,10 +157,11 @@ function Addresses() {
           <AddressCard
             key={index}
             id={address.id}
+            setLocation={setLocation}
+            lat={parseFloat(address.latitude)}
+            long={parseFloat(address.longitude)}
             state={address.city.label}
             address={address.address}
-            // setLocation={setLocation}
-            // latLong={latLong}
             postalCode={address.postalCode}
             mobile={mobile}
             name={userName}
