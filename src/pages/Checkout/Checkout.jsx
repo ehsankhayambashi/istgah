@@ -8,7 +8,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "../../Theme";
 import BrandTitle from "./components/BrandTitle";
 import CheckoutStepper from "./components/CheckoutStepper";
@@ -29,17 +29,30 @@ import {
 } from "../../hooks/numberUtils";
 import useFetch from "../../hooks/useFetch";
 import Loading from "../../components/Loading/Loading";
+import GetUserIfo from "./components/GetUserIfo";
 
 function Checkout() {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+  const products = useSelector((state) => state.cart.products);
+  const addreses = useSelector((state) => state.address.addresses);
   const [showCode, setShowCode] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [userHasAddress, setUserHasAddress] = useState(
+    addreses.length > 0 ? true : false
+  );
   const { containerRef, handleMouseDown, handleTouchStart } =
     useDraggableContainer();
   const handleOnClickCode = () => {
     setShowCode(true);
   };
-  const products = useSelector((state) => state.cart.products);
+
+  useEffect(() => {
+    if (addreses.length <= 0) {
+      setUserHasAddress(false);
+    } else {
+      setUserHasAddress(true);
+    }
+  }, [addreses]);
 
   const jwt = localStorage.getItem("jwt");
   let jwtErrorMessage = null;
@@ -62,7 +75,7 @@ function Checkout() {
   }
   if (res.data === null) return "";
   const user = res;
-  if (user.addresses.length <= 0) return "آدرس موجود نیست";
+  if (!userHasAddress) return <GetUserIfo />;
   return (
     <>
       <Container maxWidth="xl">
