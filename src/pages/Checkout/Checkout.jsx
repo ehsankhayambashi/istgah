@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Dialog,
   Divider,
   Grid,
   InputBase,
@@ -75,7 +76,6 @@ function Checkout() {
   }
   if (res.data === null) return "";
   const user = res;
-  if (!userHasAddress) return <GetUserIfo />;
   return (
     <>
       <Container maxWidth="xl">
@@ -300,6 +300,9 @@ function Checkout() {
       >
         <CheckoutPriceMobile cartPrice={formatMoney(getCartPrice(products))} />
       </Box>
+      <Dialog open={!userHasAddress}>
+        <Box display="flex" flexDirection="column"></Box>
+      </Dialog>
     </>
   );
 }
