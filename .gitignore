@@ -14,7 +14,7 @@
 # misc
 .DS_Store
 # bara inke ro liara kar kone baiad .env az ru git ingnore remove beshe
-# .env 
+.env 
 .env.local
 .env.development.local
 .env.test.local
