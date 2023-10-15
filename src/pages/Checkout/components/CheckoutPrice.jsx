@@ -126,7 +126,7 @@ function CheckoutPrice({
           size="large"
           sx={{ paddingX: "5rem", marginBottom: "1rem", width: "100%" }}
           onClick={() => checkout()}
-          disabled={loading}
+          disabled={loading || itemNumber === "۰" ? true : false}
         >
           {loading ? "درحال انتقال..." : "پرداخت"}
         </Button>

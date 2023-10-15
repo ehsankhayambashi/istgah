@@ -51,7 +51,7 @@ function CheckoutPriceMobile({ cartPrice, products, userId }) {
           sx={{ paddingX: 6, paddingY: 1.3, borderRadius: 2 }}
           size="large"
           onClick={() => checkout()}
-          disabled={loading}
+          disabled={loading || cartPrice === "۰" ? true : false}
         >
           {loading ? "درحال انتقال..." : "پرداخت"}
         </Button>
