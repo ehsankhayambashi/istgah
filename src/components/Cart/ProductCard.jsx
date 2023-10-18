@@ -4,8 +4,9 @@ import CounterCart from "./CounterCart";
 import { theme } from "../../Theme";
 import { formatNumber } from "../../hooks/numberUtils";
 import DynamicPropCart from "./DynamicPropCart";
+import LazyImage from "../LazyImage/LazyImage";
 
-function ProductCard({ product, border }) {
+function ProductCard({ product, border, counterCart = true }) {
   return (
     <Box
       display="flex"
@@ -18,12 +19,13 @@ function ProductCard({ product, border }) {
       borderColor={theme.palette.grey[300]}
     >
       <Box maxWidth="116px" flex={1} display="flex" flexDirection="column">
-        <img
-          src="https://www.technolife.ir/image/gallery-1-TLP-4993_5024bc63-9f0a-47d8-9d2b-fd555eacc08e.webp"
-          width="100%"
-          alt={product.name}
-        />
-        <CounterCart product={product} />
+        <LazyImage imageUrl={product?.image} width={116} height={100} />
+        {counterCart && <CounterCart product={product} />}
+        {!counterCart && (
+          <Box display="flex" justifyContent="center" sx={{ width: "100%" }}>
+            {formatNumber(product.quantity)}
+          </Box>
+        )}
       </Box>
       <Box flex={2} display="flex" flexDirection="column" gap={1}>
         <Typography className="noselect" fontSize="0.9rem" lineHeight={2}>

@@ -5,9 +5,43 @@ import { Link as RouterLink } from "react-router-dom";
 import { BiChevronLeft } from "react-icons/bi";
 import { BsFillBagCheckFill, BsBagXFill, BsBagPlusFill } from "react-icons/bs";
 import OrderSummery from "./Orders/components/OrderSummery";
+import jwt_decode from "jwt-decode";
+import useFetch from "../../hooks/useFetch";
+import Loading from "../../components/Loading/Loading";
 
 function Profile() {
   const biggerThanMd = useMediaQuery(theme.breakpoints.up("md"));
+
+  const jwt = localStorage.getItem("jwt");
+  let jwtErrorMessage = null;
+  let userId = null;
+  try {
+    const decoded = jwt_decode(jwt);
+    userId = decoded.id;
+  } catch (error) {
+    jwtErrorMessage = error.message;
+    console.log("error", error);
+  }
+  const { res, loading, error } = useFetch(
+    `/orders?filters[userId][$eq]=${userId}`
+  );
+
+  if (loading) return <Loading />;
+  if ((!loading && res?.error?.status > 400) || jwtErrorMessage) {
+    localStorage.removeItem("jwt");
+    window.location.reload(false);
+  }
+
+  const canceled = res.data.filter(
+    (order) => order.attributes.stateOrder === "canceled"
+  );
+  const completed = res.data.filter(
+    (order) => order.attributes.stateOrder === "completed"
+  );
+  const posted = res.data.filter(
+    (order) => order.attributes.stateOrder === "posted"
+  );
+
   return (
     <Box p={2} display="flex" flexDirection="column">
       <Box
@@ -50,19 +84,19 @@ function Profile() {
           <Box>
             <OrderSummery
               icon={<BsBagPlusFill size="3rem" color="#0073cf" />}
-              ordercount={3}
+              ordercount={completed.length}
               title="پرداخت شده"
             />
           </Box>
           <OrderSummery
             icon={<BsFillBagCheckFill size="3rem" color="#007500" />}
-            ordercount={2}
-            title="تحویل شده"
+            ordercount={posted.length}
+            title="ارسال شده"
           />
           <Box>
             <OrderSummery
               icon={<BsBagXFill size="3rem" color="#750000" />}
-              ordercount={0}
+              ordercount={canceled.length}
               title="لغو شده"
             />
           </Box>
