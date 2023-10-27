@@ -99,13 +99,12 @@ function OrderDetails() {
   const { res, loading, error } = useFetch(
     `/order/orderDetails/${userId}/${orderId}`
   );
-
+  console.log(res);
   if (loading) return <Loading />;
   if ((!loading && res?.error?.status > 400) || jwtErrorMessage) {
     localStorage.removeItem("jwt");
     window.location.reload(false);
   }
-  console.log(res);
   order = res;
 
   if (!order)
